@@ -1,6 +1,4 @@
-telethon
-pymongo[srv]
-motor
-python-dotenv
+pyrogram
+tgcrypto
 flask
 gunicorn
