@@ -1,11 +1,42 @@
-from telethon import TelegramClient, events
+import os
+from flask import Flask
+from threading import Thread
+from pyrogram import Client
 from config import Config
 
-bot = TelegramClient('headmaster', Config.API_ID, Config.API_HASH).start(bot_token=Config.BOT_TOKEN)
+# -----------------------------
+# Telegram Bot Setup
+# -----------------------------
 
-@bot.on(events.NewMessage(pattern='/start'))
-async def start(event):
-    await event.reply("जी बॉस! हेडmaster सिस्टम तैयार है।")
+bot = Client(
+    "premium-bot",
+    api_id=Config.API_ID,
+    api_hash=Config.API_HASH,
+    bot_token=Config.BOT_TOKEN
+)
 
-print("बोट शुरू हो गया है, बॉस...")
-bot.run_until_disconnected()
+@bot.on_message()
+async def start_handler(client, message):
+    await message.reply_text("🔥 Premium Bot is Running!")
+
+# -----------------------------
+# Web Server (Koyeb ke liye)
+# -----------------------------
+
+web_app = Flask(__name__)
+
+@web_app.route("/")
+def home():
+    return "Bot is running!"
+
+def run_web():
+    port = int(os.environ.get("PORT", 8000))
+    web_app.run(host="0.0.0.0", port=port)
+
+# -----------------------------
+# Start Both
+# -----------------------------
+
+if __name__ == "__main__":
+    Thread(target=run_web).start()
+    bot.run()
