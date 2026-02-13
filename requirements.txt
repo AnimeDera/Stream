@@ -2,3 +2,5 @@ telethon
 pymongo[srv]
 motor
 python-dotenv
+flask
+gunicorn
